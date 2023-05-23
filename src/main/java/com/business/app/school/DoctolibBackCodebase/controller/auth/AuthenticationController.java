@@ -7,6 +7,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.Register
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,12 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest registerRequest) throws AlreadyExistsException {
-        return ResponseEntity.ok(this.authenticationService.register(registerRequest));
+        try {
+            AuthenticationResponse response = this.authenticationService.register(registerRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (AlreadyExistsException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     @PostMapping("/authenticate")
