@@ -125,8 +125,6 @@ public class JwtService {
      * @return String representing token
      */
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        System.out.println(" test before" );
-
         String jwts = Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -135,8 +133,6 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 24)))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
-        System.out.println(" test " + jwts );
-
         return jwts;
     }
 

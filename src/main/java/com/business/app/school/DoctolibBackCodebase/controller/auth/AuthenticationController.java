@@ -5,6 +5,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.Authenti
 import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.AuthenticationResponse;
 import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.RegisterRequest;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
+import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest registerRequest){
-        return ResponseEntity.ok(this.authenticationService.authenticate(registerRequest));
-    }
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest registerRequest) throws BadCredentialException{
+        try {
+            AuthenticationResponse response = this.authenticationService.authenticate(registerRequest);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (BadCredentialException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
+    }
 
 }

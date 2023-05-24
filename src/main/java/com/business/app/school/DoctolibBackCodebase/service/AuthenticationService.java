@@ -7,6 +7,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.Register
 import com.business.app.school.DoctolibBackCodebase.domain.Role;
 import com.business.app.school.DoctolibBackCodebase.domain.user.User;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
+import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.infra.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -54,7 +55,7 @@ public class AuthenticationService {
 
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticateRequest) {
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticateRequest) throws BadCredentialException {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticateRequest.getEmail(),
