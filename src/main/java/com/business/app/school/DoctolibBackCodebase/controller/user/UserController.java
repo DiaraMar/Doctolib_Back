@@ -2,6 +2,7 @@ package com.business.app.school.DoctolibBackCodebase.controller.user;
 
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationResponse;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
+import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,16 +17,15 @@ public class UserController {
     private final AuthenticationService authenticationService;
 
     @PatchMapping("/password")
-    public ResponseEntity<AuthenticationResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<AuthenticationResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) throws BadCredentialException {
         try {
             System.out.println("Controller " + resetPasswordRequest);
 
             authenticationService.resetPassword(resetPasswordRequest);
             return ResponseEntity.status(HttpStatus.OK).build();
 
-        } catch (Exception e) {
-            System.out.println(e);
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        } catch (BadCredentialException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 }
 
