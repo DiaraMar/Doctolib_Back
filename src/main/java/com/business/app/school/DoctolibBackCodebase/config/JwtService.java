@@ -25,6 +25,8 @@ import java.util.function.Function;
  *
  * @Service extends @Component ; it used to make the class available as a managed been for spring
  */
+
+
 @Service
 public class JwtService {
 
@@ -145,4 +147,6 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+
+
 }

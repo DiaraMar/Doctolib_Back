@@ -1,4 +1,4 @@
-package com.business.app.school.DoctolibBackCodebase.controller.auth.DTO;
+package com.business.app.school.DoctolibBackCodebase.controller.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

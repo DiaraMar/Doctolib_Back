@@ -24,6 +24,8 @@ import java.io.IOException;
  * @Component used to make the class available as a managed been for spring
  * @RequiredArgsConstructor create constructor using all final private fields stated
  */
+
+
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilterService extends OncePerRequestFilter {
@@ -58,7 +60,6 @@ public class JwtAuthenticationFilterService extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-
         /**
          * ¹ token is stored in the Authorization inside of the header of HttpServletRequest
          *   if token not corresponding to expectation, process is interrupting (return)
@@ -67,7 +68,6 @@ public class JwtAuthenticationFilterService extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
-
             return;
         }
         final String jwtToken;

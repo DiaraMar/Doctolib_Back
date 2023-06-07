@@ -1,5 +1,6 @@
 package com.business.app.school.DoctolibBackCodebase.config;
 
+import com.business.app.school.DoctolibBackCodebase.domain.Role;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,11 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 /**
- *
  * @Configuration forced Spring at every start up of the application to pick up configurations and implements all beans within the classes
  * N.B. Beans are always public methods
  * @RequiredArgsConstructor to inject final variables stated
  */
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -32,8 +33,8 @@ public class SecurityConfiguration {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/me/**").authenticated()
-                .requestMatchers("/api/v1/auth/**").permitAll()
+                    .requestMatchers("/api/v1/users/me/**").permitAll()//todo : fix authenticated()
+                    .requestMatchers("/api/v1/auth/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .sessionManagement()

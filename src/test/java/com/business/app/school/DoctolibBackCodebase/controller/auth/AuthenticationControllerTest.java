@@ -1,8 +1,8 @@
 package com.business.app.school.DoctolibBackCodebase.controller.auth;
 
-import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.AuthenticationRequest;
-import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.AuthenticationResponse;
-import com.business.app.school.DoctolibBackCodebase.controller.auth.DTO.RegisterRequest;
+import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationRequest;
+import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationResponse;
+import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterRequest;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

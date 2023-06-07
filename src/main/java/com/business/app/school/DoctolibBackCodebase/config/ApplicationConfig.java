@@ -1,6 +1,6 @@
 package com.business.app.school.DoctolibBackCodebase.config;
 
-import com.business.app.school.DoctolibBackCodebase.infra.user.UserRepository;
+import com.business.app.school.DoctolibBackCodebase.infra.user.UserJPARepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +21,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * N.B. Beans are always public methods
  * @RequiredArgsConstructor to inject final variables stated
  */
+
+
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
-    private final UserRepository userRepository;
+    private final UserJPARepository userJPARepository;
 
     /**
      * Get user from database
@@ -33,7 +36,7 @@ public class ApplicationConfig {
      */
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
+        return username -> userJPARepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found")); //since our repositorymethod is of type optional with have to manage the case the username is not found
     }
 

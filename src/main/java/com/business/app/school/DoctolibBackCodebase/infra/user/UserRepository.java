@@ -1,11 +1,14 @@
 package com.business.app.school.DoctolibBackCodebase.infra.user;
 
-import com.business.app.school.DoctolibBackCodebase.domain.user.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+@Service
+@Transactional
+@AllArgsConstructor
+public class UserRepository {
 
-    Optional<User> findByEmail(String email);
-    User save(User user);
+
+
 }
