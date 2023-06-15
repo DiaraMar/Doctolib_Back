@@ -12,6 +12,7 @@ import com.business.app.school.DoctolibBackCodebase.domain.user.User;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.infra.user.UserJPARepository;
+import com.business.app.school.DoctolibBackCodebase.infra.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationService implements AuthInterface {
 
-    private final UserJPARepository userJPARepository;
+    private final UserRepository userJPARepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -49,7 +50,6 @@ public class AuthenticationService implements AuthInterface {
                 .role(Role.USER)
                 .build();
 
-
         logger.info("user to save ", user);
         userJPARepository.save(user);
 
@@ -61,7 +61,6 @@ public class AuthenticationService implements AuthInterface {
                 .builder()
                 .token(jwtToken)
                 .build();
-
     }
 
     logger.info("RegisterRequest already exist in the database");
@@ -69,8 +68,8 @@ public class AuthenticationService implements AuthInterface {
             .builder()
             .token(null)
             .build();
-
     }
+
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest authenticateRequest) throws BadCredentialException {
         logger.info("authenticate(AuthenticationRequest authenticateRequest)");
