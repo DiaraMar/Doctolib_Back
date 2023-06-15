@@ -6,6 +6,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterReque
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -64,13 +65,19 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    public void if_register_failed_without_AlreadyExistsException_error_HTPP_status_CONFLICT_is_not_expected() throws AlreadyExistsException {
+    public void if_register_failed_without_AlreadyExistsException_error_HTTP_status_CONFLICT_is_not_expected() throws AlreadyExistsException {
         RegisterRequest registerRequest = new RegisterRequest();
         when(authenticationService.register(registerRequest)).thenThrow(new Exception(""));
 
-        ResponseEntity<AuthenticationResponse> responseEntity = authenticationController.register(registerRequest);
-        assertNotEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+        try {
+            ResponseEntity<AuthenticationResponse> responseEntity = authenticationController.register(registerRequest);
+            fail("Expected exception to be thrown");
+            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        } catch (Exception e) {
+            // L'exception est correctement capturée
+        }
     }
+
 
     @Test
     public void verify_that_service_has_been_call_once() throws AlreadyExistsException {

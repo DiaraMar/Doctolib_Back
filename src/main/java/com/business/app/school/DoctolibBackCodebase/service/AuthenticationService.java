@@ -5,6 +5,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.DTO.Authenticatio
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationResponse;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterRequest;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
+import com.business.app.school.DoctolibBackCodebase.controller.auth.AuthenticationController;
 import com.business.app.school.DoctolibBackCodebase.domain.Role;
 import com.business.app.school.DoctolibBackCodebase.domain.auth.AuthInterface;
 import com.business.app.school.DoctolibBackCodebase.domain.user.User;
@@ -12,6 +13,8 @@ import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsExcep
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.infra.user.UserJPARepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,10 +29,17 @@ public class AuthenticationService implements AuthInterface {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    private static final Logger logger = LogManager.getLogger(AuthenticationController.class);
+
+
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest) throws AlreadyExistsException {
 
+        logger.info("Register(RegisterRequest registerRequest)");
+        logger.info("registerRequest", registerRequest);
+
     if (isAlreadyRegister(registerRequest.getEmail())== false){
+        logger.info("RegisterRequest not exist in the database");
         var user = User
                 .builder()
                 .firstname(registerRequest.getFirstname())
@@ -40,9 +50,13 @@ public class AuthenticationService implements AuthInterface {
                 .build();
 
 
+        logger.info("user to save ", user);
         userJPARepository.save(user);
 
+        logger.info("Generate token");
         var jwtToken = jwtService.generateToken(user);
+
+        logger.info("Return token");
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
@@ -50,6 +64,7 @@ public class AuthenticationService implements AuthInterface {
 
     }
 
+    logger.info("RegisterRequest already exist in the database");
     return AuthenticationResponse
             .builder()
             .token(null)
@@ -58,7 +73,12 @@ public class AuthenticationService implements AuthInterface {
     }
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest authenticateRequest) throws BadCredentialException {
+        logger.info("authenticate(AuthenticationRequest authenticateRequest)");
+        logger.info("authenticateRequest ", authenticateRequest);
 
+        logger.info("authenticationManager.authenticate(UsernamePasswordAuthenticationToken)");
+        logger.info("UsernamePasswordAuthenticationToken->getEmail() ", authenticateRequest.getEmail());
+        logger.info("UsernamePasswordAuthenticationToken->getPassword ", authenticateRequest.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticateRequest.getEmail(),
@@ -66,10 +86,14 @@ public class AuthenticationService implements AuthInterface {
                 )
         );
 
+        logger.info("userJPARepository.findByEmail(authenticateRequest.getEmail())");
         var user = userJPARepository.findByEmail(authenticateRequest.getEmail())
                 .orElseThrow(); //todo : refactor.  generalize isAlreadyRegister method to be call also from here
 
+        logger.info("User", user);
+        logger.info("Generate token");
         var jwtToken = jwtService.generateToken(user);
+        logger.info("Return token");
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
@@ -77,7 +101,11 @@ public class AuthenticationService implements AuthInterface {
     }
     @Override
     public AuthenticationResponse resetPassword(ResetPasswordRequest resetPasswordRequest) throws BadCredentialException {
-        System.out.println("resetpassword method");
+        logger.info("ResetPassword(ResetPasswordRequest resetPasswordRequest)");
+        logger.info("resetPasswordRequest", resetPasswordRequest);
+        logger.info("AuthenticationManager.authenticate(UsernamePasswordAuthenticationToken)");
+        logger.info("UsernamePasswordAuthenticationToken->getEmail() ", resetPasswordRequest.getEmail());
+        logger.info("UsernamePasswordAuthenticationToken->getPassword ", resetPasswordRequest.getOldPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         resetPasswordRequest.getEmail(),
@@ -85,19 +113,27 @@ public class AuthenticationService implements AuthInterface {
                 )
         );
 
+        logger.info("userJPARepository.findByEmail(resetPasswordRequest.getEmail())");
         var user = userJPARepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(); //todo : refactor.  generalize isAlreadyRegister method to be call also from here
+        logger.info("User", user);
+        logger.info("Generate token");
 
+        logger.info("Update password *********");
         user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
-        user.setFirstname("update firstname");
 
-        System.out.println("user before update"+ user);
+        logger.info("userJPARepository.save(user)");
         userJPARepository.save(user);
+
+        logger.info("userJPARepository.findByEmail(resetPasswordRequest.getEmail())");
         user = userJPARepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow();
         System.out.println(user);
 
+        logger.info("User", user);
+        logger.info("Generate token");
         var jwtToken = jwtService.generateToken(user);
+        logger.info("Return token");
         return AuthenticationResponse
                 .builder()
                 .token(jwtToken)
@@ -111,9 +147,6 @@ public class AuthenticationService implements AuthInterface {
         }
     return false;
     }
-
-
-
 
 }
 
