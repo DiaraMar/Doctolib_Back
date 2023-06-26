@@ -43,7 +43,7 @@ public class UserController {
             logger.info("Response http is INTERNAL_SERVER_ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthenticationResponse("Internal error occure"));
         }
-}
+    }
 
 
 }

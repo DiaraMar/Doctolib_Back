@@ -11,7 +11,6 @@ import com.business.app.school.DoctolibBackCodebase.domain.auth.AuthInterface;
 import com.business.app.school.DoctolibBackCodebase.domain.user.User;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
-import com.business.app.school.DoctolibBackCodebase.infra.user.UserJPARepository;
 import com.business.app.school.DoctolibBackCodebase.infra.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;

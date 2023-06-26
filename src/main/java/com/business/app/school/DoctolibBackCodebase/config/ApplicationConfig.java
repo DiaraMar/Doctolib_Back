@@ -1,6 +1,5 @@
 package com.business.app.school.DoctolibBackCodebase.config;
 
-import com.business.app.school.DoctolibBackCodebase.infra.user.UserJPARepository;
 import com.business.app.school.DoctolibBackCodebase.infra.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
