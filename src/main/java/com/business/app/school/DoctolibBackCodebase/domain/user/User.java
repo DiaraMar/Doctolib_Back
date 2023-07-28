@@ -1,7 +1,7 @@
 package com.business.app.school.DoctolibBackCodebase.domain.user;
 
 import com.business.app.school.DoctolibBackCodebase.domain.Role;
-import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Patient;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +41,7 @@ public class User implements UserDetails {
     @Column(name="user_id")
     @GeneratedValue // Default value is GenerationType.AUTO
     private Integer  id;
+
     private String firstname;
     private String lastname;
     private String email;
@@ -53,8 +54,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Account> accounts;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Patient patient;
 
 
 
@@ -100,20 +101,11 @@ public class User implements UserDetails {
         return true;
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setAccounts(List<Account> accounts) {
-
-        this.accounts = accounts;
-    }
-
-    public void addAccount(Account account) {
-        if (accounts == null) {
-            accounts = new ArrayList<>();
-        }
-        account.setUser(this);
-        accounts.add(account);
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }

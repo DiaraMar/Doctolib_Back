@@ -1,8 +1,6 @@
 package com.business.app.school.DoctolibBackCodebase.controller.user;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationResponse;
-import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterRequest;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
-import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 
-class UserControllerTest {
+class AccountControllerTest {
 
 
     @Mock
     private AuthenticationService authenticationService;
 
     @InjectMocks
-    private UserController userController;
+    private AccountController accountController;
 
     @BeforeEach
     public void setup() {
@@ -37,7 +35,7 @@ class UserControllerTest {
         AuthenticationResponse authenticationResponse = new AuthenticationResponse();
         when(authenticationService.resetPassword(resetPasswordRequest)).thenReturn(authenticationResponse);
 
-        ResponseEntity<AuthenticationResponse> responseEntity = userController.resetPassword(resetPasswordRequest);
+        ResponseEntity<AuthenticationResponse> responseEntity = accountController.resetPassword(resetPasswordRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
@@ -47,7 +45,7 @@ class UserControllerTest {
         ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
         when(authenticationService.resetPassword(resetPasswordRequest)).thenThrow(new BadCredentialException(""));
 
-        ResponseEntity<AuthenticationResponse> responseEntity = userController.resetPassword(resetPasswordRequest);
+        ResponseEntity<AuthenticationResponse> responseEntity = accountController.resetPassword(resetPasswordRequest);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 
@@ -60,7 +58,7 @@ class UserControllerTest {
         AuthenticationResponse expectedResponse = new AuthenticationResponse();
         when(authenticationService.resetPassword(resetPasswordRequest)).thenThrow(new BadCredentialException(""));
 
-        ResponseEntity<AuthenticationResponse> responseEntity = userController.resetPassword(resetPasswordRequest);
+        ResponseEntity<AuthenticationResponse> responseEntity = accountController.resetPassword(resetPasswordRequest);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
 

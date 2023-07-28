@@ -7,9 +7,8 @@ import java.util.Optional;
 
 @Component
 public interface AccountInterface {
-    Optional<Account> getAccount(String email);
-    Optional <List<Account>> getAllAccounts(String email);
+    Optional<Patient> getPatientAccount(String email);
 
-    Account updateAccount(Account account);
+    Patient updateAccount(Patient patient, String username);
 
 }

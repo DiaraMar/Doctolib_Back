@@ -2,8 +2,10 @@ package com.business.app.school.DoctolibBackCodebase.controller.user;
 
 import com.business.app.school.DoctolibBackCodebase.config.interceptor.BearerTokenWrapper;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.AuthenticationResponse;
+import com.business.app.school.DoctolibBackCodebase.controller.DTO.PatientRequest;
+import com.business.app.school.DoctolibBackCodebase.controller.DTO.PatientResponse;
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
-import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Patient;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
 import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
 import com.business.app.school.DoctolibBackCodebase.service.AccountService;
@@ -14,21 +16,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/users/me")
 @RequiredArgsConstructor
-public class UserController {
+public class AccountController {
 
     private final AuthenticationService authenticationService;
     private final AccountService userService;
-    private static final Logger logger = LogManager.getLogger(UserController.class);
+    private static final Logger logger = LogManager.getLogger(AccountController.class);
 
     private final BearerTokenWrapper tokenWrapper;
 
 
+    private String extractUsername(){
+        logger.info("Try extract userdetails from token");
+        try {
+            return  this.authenticationService.getEmail(tokenWrapper.getToken());
+        }
+        catch (Exception e) {
+            logger.error("Failed extract operation", e);
+            return null;
+        }
+    }
+
+
+    /** ALL profil **/
     @PatchMapping("/password")
     public ResponseEntity<AuthenticationResponse> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) throws BadCredentialException {
         logger.info("@PatchMapping/password");
@@ -52,27 +66,28 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new AuthenticationResponse("Internal error occure"));
         }
     }
+
+
+    /** Patient profil **/
+
     @GetMapping("/account")
-    public Optional<Account> getCurrentAccount(@RequestBody String email) {
-        // extract email from token
-        return this.userService.getAccount(email);
-    }
-
-    @GetMapping("/accounts")
-    public Optional<List<Account>> getAllAccount() {
-
-
-        String email = this.authenticationService.getEmail(tokenWrapper.getToken());
-
-        return this.userService.getAllAccounts(email);
+    public Optional<PatientResponse> getPatientAccount() {
+        logger.info(" @GetMapping/account");
+        return Optional.of(new PatientResponse(this.userService.getPatientAccount(extractUsername())));
     }
 
     @PatchMapping("/account")
-    public Account updateAccount(@RequestBody Account account) {
-        // extract email from token
-
-        return this.userService.updateAccount(account);
+    public Optional<PatientResponse> updateAccount(@RequestBody PatientRequest patientRequest) {
+        return Optional.of(new PatientResponse(this.userService.updateAccount(patientRequest.toPatient(), extractUsername())));
     }
+
+    /** Patient profil **/
+
+
+
+    /** Assistant profil **/
+
+
 
 
 }

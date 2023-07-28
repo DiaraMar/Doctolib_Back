@@ -1,7 +1,7 @@
 package com.business.app.school.DoctolibBackCodebase.service;
 
 import com.business.app.school.DoctolibBackCodebase.config.JwtAuthenticationFilterService;
-import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Patient;
 import com.business.app.school.DoctolibBackCodebase.domain.account.AccountInterface;
 import com.business.app.school.DoctolibBackCodebase.infra.user.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,28 +15,29 @@ import java.util.Optional;
 public class AccountService implements AccountInterface {
 
     private final AccountRepository accountRepository;
-    private final JwtAuthenticationFilterService jwtAuthenticationFilterService;
 
 
     @Override
-    public Optional<Account> getAccount(String email) {
-            return this.accountRepository.getAccount(email);
-    }
-
-    @Override
-    public Optional<List<Account>> getAllAccounts(String email) {
-        System.out.println("service " + email);
-
-        return this.accountRepository.getAllAccount(email);
+    public Optional<Patient> getPatientAccount(String email) {
+        return this.accountRepository.getPatientAccountBy(email);
     }
 
 
     @Override
-    public Account updateAccount(Account account) {
-        //If token valid
+    public Patient updateAccount(Patient updatedPatient, String username) {
+
+        Patient savedPatient = this.accountRepository.getAccount(username).get();
+        //
+        if( savedPatient !=null){
+            updatedPatient.setId(savedPatient.getId());
+            updatedPatient.setUser(savedPatient.getUser());
+            return this.accountRepository.updateAccount(updatedPatient);
+
+        }
+
+        return null;
         //If accountId from token = accountId
 
-        return this.accountRepository.updateAccount(account);
     }
 
 

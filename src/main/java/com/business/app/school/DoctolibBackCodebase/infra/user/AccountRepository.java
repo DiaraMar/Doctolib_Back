@@ -1,13 +1,10 @@
 package com.business.app.school.DoctolibBackCodebase.infra.user;
 
-import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
-import com.business.app.school.DoctolibBackCodebase.domain.user.User;
-import com.business.app.school.DoctolibBackCodebase.service.AuthenticationService;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Patient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,29 +12,30 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AccountRepository {
 
-    private final AccountJPARepository accountJPARepository;
+    private final PatientJPARepository patientJPARepository;
     private final UserRepository userRepository;
 
 
-    public Optional<Account> getAccount(String email) {
-       return this.accountJPARepository.findById(1L);
+    public Optional<Patient> getAccount(String email) {
+       return this.patientJPARepository.findById(1L);
     }
 
-    public Optional<List<Account>> getAllAccount(String email) {
+    public Optional<Patient> getPatientAccountBy(String email) {
 
+        System.out.println("repo patient email " + email);
 
         if( !this.userRepository.findByEmail(email).isEmpty() && this.userRepository.findByEmail(email).get().getId() !=null){
-            System.out.println("repo user");
+            System.out.println("try get by ID " + this.userRepository.findByEmail(email).get().getId());
 
-            return this.accountJPARepository.findAllAccountBy(this.userRepository.findByEmail(email).get().getId());
+            return this.patientJPARepository.findPatientAccountBy(this.userRepository.findByEmail(email).get().getId());
         }
             return null;
     }
-    public Account save(Account account) {
-        return this.accountJPARepository.save(account);
+    public Patient save(Patient patient) {
+        return this.patientJPARepository.save(patient);
     }
 
-    public Account updateAccount(Account account) {
-        return this.accountJPARepository.save(account);
+    public Patient updateAccount(Patient patient) {
+        return this.patientJPARepository.save(patient);
     }
 }

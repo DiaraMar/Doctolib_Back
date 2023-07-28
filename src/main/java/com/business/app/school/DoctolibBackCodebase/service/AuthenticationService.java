@@ -7,7 +7,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterReque
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
 import com.business.app.school.DoctolibBackCodebase.controller.auth.AuthenticationController;
 import com.business.app.school.DoctolibBackCodebase.domain.Role;
-import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Patient;
 import com.business.app.school.DoctolibBackCodebase.domain.auth.AuthInterface;
 import com.business.app.school.DoctolibBackCodebase.domain.user.User;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
@@ -46,26 +46,26 @@ public class AuthenticationService implements AuthInterface {
         logger.info("RegisterRequest not exist in the database");
         User user = User
                 .builder()
-                .firstname(registerRequest.getFirstname())
-                .lastname(registerRequest.getLastname())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .firstname(registerRequest.getFirstname())
+                .lastname(registerRequest.getLastname())
                 .role(Role.USER)
                 .build();
 
         user = userRepository.save(user);
         System.out.println("user saved "+ user);
 
-        //
 
-        for(Account account : registerRequest.getAccounts()){
-            System.out.println(account);
-            account.setUser(user);
-            accountRepository.save(account);
+        if(registerRequest.getPatient() !=null){ // add assistant and patient conition
+            if(registerRequest.getPatient() !=null){
+                registerRequest.getPatient().setUser(user);
+                accountRepository.save((Patient) registerRequest.getPatient());
+            }
+
+            this.userRepository.update(user);
         }
 
-        System.out.println("END FOR LOOP");
-        this.userRepository.update(user);
 
 
 

@@ -32,8 +32,6 @@ public class UserDAO {
     public User toRegisterUser(){
         return User.builder()
                 .id(this.id)
-                .firstname(this.firstname)
-                .lastname(this.lastname)
                 .email(this.email)
                 .build();
     }
