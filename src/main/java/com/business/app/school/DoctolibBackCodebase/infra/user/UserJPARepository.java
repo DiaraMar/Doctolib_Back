@@ -8,4 +8,7 @@ public interface UserJPARepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByEmail(String email);
     User save(User user);
+
+    @Override
+    <S extends User> S saveAndFlush(S entity);
 }

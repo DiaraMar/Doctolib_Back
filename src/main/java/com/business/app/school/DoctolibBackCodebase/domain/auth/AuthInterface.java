@@ -6,6 +6,7 @@ import com.business.app.school.DoctolibBackCodebase.controller.DTO.RegisterReque
 import com.business.app.school.DoctolibBackCodebase.controller.DTO.ResetPasswordRequest;
 import com.business.app.school.DoctolibBackCodebase.exception.AlreadyExistsException;
 import com.business.app.school.DoctolibBackCodebase.exception.BadCredentialException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +16,8 @@ public interface AuthInterface {
     AuthenticationResponse authenticate(AuthenticationRequest authenticateRequest) throws BadCredentialException;
     AuthenticationResponse resetPassword(ResetPasswordRequest resetPasswordRequest) throws BadCredentialException;
     boolean isAlreadyRegister(String email) throws AlreadyExistsException;
+    boolean isTokenExpired(String token, UserDetails userDetails);
+
 
 
 }

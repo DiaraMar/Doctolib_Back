@@ -1,6 +1,7 @@
 package com.business.app.school.DoctolibBackCodebase.domain.user;
 
 import com.business.app.school.DoctolibBackCodebase.domain.Role;
+import com.business.app.school.DoctolibBackCodebase.domain.account.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,8 +38,9 @@ public class User implements UserDetails {
      */
 
     @Id
-    @GeneratedValue // Default value is GenerationType.AUTO )
-    private Integer id;
+    @Column(name="user_id")
+    @GeneratedValue // Default value is GenerationType.AUTO
+    private Integer  id;
     private String firstname;
     private String lastname;
     private String email;
@@ -49,6 +52,10 @@ public class User implements UserDetails {
      */
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Account> accounts;
+
 
 
     @Override
@@ -91,5 +98,22 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+
+        this.accounts = accounts;
+    }
+
+    public void addAccount(Account account) {
+        if (accounts == null) {
+            accounts = new ArrayList<>();
+        }
+        account.setUser(this);
+        accounts.add(account);
     }
 }

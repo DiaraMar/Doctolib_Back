@@ -2,7 +2,6 @@ package com.business.app.school.DoctolibBackCodebase.infra.user;
 
 import com.business.app.school.DoctolibBackCodebase.domain.user.User;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +22,9 @@ public class UserRepository {
         return userJPARepository.save(user);
     }
 
+    public User update(User user){
+        return userJPARepository.saveAndFlush(user);
+    }
 
 
 }

@@ -10,6 +10,8 @@ package com.business.app.school.DoctolibBackCodebase.domain;
  */
 
 public enum Role {
-    USER,
-    ADMIN,
+    USER, //link to user
+    ADMIN, //link to user
+    PATIENT, // link to account
+    PRACTICER // link to account
 }
